@@ -1,0 +1,116 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Manrope:wght@300;400;500;600;700&family=Parisienne&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-ivory: #F9F4E9;
+  --color-warm-beige: #EEE2CF;
+  --color-deep-maroon: #4E0F1D;
+  --color-dark-maroon: #370914;
+  --color-muted-gold: #BA8A45;
+  --color-light-gold: #D7B87B;
+  --color-charcoal: #30271F;
+}
+
+html {
+  scroll-behavior: smooth;
+  background-color: #370914;
+  color: #30271F;
+}
+
+body {
+  font-family: var(--font-sans), 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  overflow-x: hidden;
+  background-color: #F9F4E9;
+}
+
+/* Custom selection */
+::selection {
+  background-color: #BA8A45;
+  color: #FFFFFF;
+}
+
+/* Custom refined scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #2A060F;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #BA8A45;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #D7B87B;
+}
+
+/* Subtle gold foil shine animation */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.gold-gradient-text {
+  background: linear-gradient(135deg, #D7B87B 0%, #BA8A45 50%, #F5ECE0 75%, #BA8A45 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gold-border-glow {
+  box-shadow: 0 0 25px rgba(215, 184, 123, 0.12), inset 0 0 15px rgba(186, 138, 69, 0.08);
+}
+
+.gold-card-shadow {
+  box-shadow: 0 12px 36px -8px rgba(55, 9, 20, 0.18), 0 0 0 1px rgba(186, 138, 69, 0.22);
+}
+
+.dark-gold-card-shadow {
+  box-shadow: 0 16px 40px -10px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(215, 184, 123, 0.2);
+}
+
+/* Subtle arch decorative borders */
+.ornate-border-frame {
+  position: relative;
+}
+
+.ornate-border-frame::before {
+  content: '';
+  position: absolute;
+  inset: 6px;
+  border: 1px solid rgba(186, 138, 69, 0.3);
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+/* Subtle pattern overlay */
+.mughal-pattern {
+  background-image: radial-gradient(rgba(186, 138, 69, 0.12) 1px, transparent 0);
+  background-size: 24px 24px;
+}
+
+.mughal-pattern-dark {
+  background-image: radial-gradient(rgba(215, 184, 123, 0.08) 1px, transparent 0);
+  background-size: 28px 28px;
+}
+
+/* Accessibility: respect prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
