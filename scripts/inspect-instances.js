@@ -8,3 +8,4 @@ https.get("https://api.invidious.io/instances.json", { headers: { "User-Agent": 
     console.log("Sample:", list[0]);
   });
 });
+

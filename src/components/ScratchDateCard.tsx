@@ -19,6 +19,19 @@ export default function ScratchDateCard({ onRevealed }: ScratchDateCardProps) {
   const [isRevealed, setIsRevealed] = useState(false);
   const [scratchPercent, setScratchPercent] = useState(0);
 
+  // Refs to prevent mobile scroll from resetting scratch state
+  const isRevealedRef = useRef(false);
+  const scratchPercentRef = useRef(0);
+  const lastWidthRef = useRef(0);
+
+  useEffect(() => {
+    isRevealedRef.current = isRevealed;
+  }, [isRevealed]);
+
+  useEffect(() => {
+    scratchPercentRef.current = scratchPercent;
+  }, [scratchPercent]);
+
   // Trigger celebration confetti
   const fireCelebration = useCallback(() => {
     try {
@@ -162,14 +175,36 @@ export default function ScratchDateCard({ onRevealed }: ScratchDateCardProps) {
     }
 
     setIsRevealed(false);
+    isRevealedRef.current = false;
     setScratchPercent(0);
+    scratchPercentRef.current = 0;
   }, [drawFoil]);
 
   useEffect(() => {
+    lastWidthRef.current = window.innerWidth;
     initCanvas();
+
     const handleResize = () => {
+      // 1. If already revealed, NEVER re-cover or reset the date!
+      if (isRevealedRef.current) return;
+
+      // 2. On mobile (iOS Safari / Android), scrolling hides/shows the address bar,
+      // which triggers a window 'resize' event (changing ONLY window.innerHeight).
+      // We check if window.innerWidth has actually changed (e.g. phone orientation change).
+      const currentWidth = window.innerWidth;
+      if (Math.abs(currentWidth - lastWidthRef.current) < 15) {
+        return; // Ignore scroll-induced mobile toolbar resize!
+      }
+      lastWidthRef.current = currentWidth;
+
+      // 3. If the user has already scratched part of the card, do not wipe it
+      if (scratchPercentRef.current > 0) {
+        return;
+      }
+
       initCanvas();
     };
+
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, [initCanvas]);
@@ -177,7 +212,7 @@ export default function ScratchDateCard({ onRevealed }: ScratchDateCardProps) {
   // Check how much percentage of foil is scratched
   const checkScratchPercentage = useCallback(() => {
     const canvas = canvasRef.current;
-    if (!canvas || isRevealed) return;
+    if (!canvas || isRevealedRef.current) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
@@ -201,56 +236,100 @@ export default function ScratchDateCard({ onRevealed }: ScratchDateCardProps) {
 
       const percent = Math.min(100, Math.round((transparentPixels / totalSampled) * 100));
       setScratchPercent(percent);
+      scratchPercentRef.current = percent;
 
-      if (percent >= 35 && !isRevealed) {
+      if (percent >= 35 && !isRevealedRef.current) {
         setIsRevealed(true);
+        isRevealedRef.current = true;
         fireCelebration();
         if (onRevealed) onRevealed();
       }
     } catch {
       // safe fallback
     }
-  }, [isRevealed, fireCelebration, onRevealed]);
+  }, [fireCelebration, onRevealed]);
 
   // Scratch stroke logic
-  const scratch = useCallback(
-    (clientX: number, clientY: number) => {
-      const canvas = canvasRef.current;
-      if (!canvas || isRevealed) return;
-      const ctx = canvas.getContext("2d");
-      if (!ctx) return;
+  const scratch = useCallback((clientX: number, clientY: number) => {
+    const canvas = canvasRef.current;
+    if (!canvas || isRevealedRef.current) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
 
-      const rect = canvas.getBoundingClientRect();
-      const x = clientX - rect.left;
-      const y = clientY - rect.top;
+    const rect = canvas.getBoundingClientRect();
+    const x = clientX - rect.left;
+    const y = clientY - rect.top;
 
-      ctx.save();
-      ctx.globalCompositeOperation = "destination-out";
-      ctx.fillStyle = "#000000";
-      ctx.strokeStyle = "#000000";
-      ctx.lineWidth = 48;
-      ctx.lineCap = "round";
-      ctx.lineJoin = "round";
+    ctx.save();
+    ctx.globalCompositeOperation = "destination-out";
+    ctx.fillStyle = "#000000";
+    ctx.strokeStyle = "#000000";
+    ctx.lineWidth = 48;
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
 
-      if (lastPointRef.current) {
-        ctx.beginPath();
-        ctx.moveTo(lastPointRef.current.x, lastPointRef.current.y);
-        ctx.lineTo(x, y);
-        ctx.stroke();
-      }
-
+    if (lastPointRef.current) {
       ctx.beginPath();
-      ctx.arc(x, y, 24, 0, Math.PI * 2);
-      ctx.fill();
+      ctx.moveTo(lastPointRef.current.x, lastPointRef.current.y);
+      ctx.lineTo(x, y);
+      ctx.stroke();
+    }
 
-      ctx.restore();
+    ctx.beginPath();
+    ctx.arc(x, y, 24, 0, Math.PI * 2);
+    ctx.fill();
 
-      lastPointRef.current = { x, y };
-    },
-    [isRevealed]
-  );
+    ctx.restore();
 
-  // Pointer event handlers (Universal mouse + touch support)
+    lastPointRef.current = { x, y };
+  }, []);
+
+  // iOS Safari touch listener to guarantee smooth scratch without triggering page scroll
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const handleTouchStart = (e: TouchEvent) => {
+      if (isRevealedRef.current) return;
+      if (e.touches.length === 1) {
+        if (e.cancelable) e.preventDefault();
+        isDrawingRef.current = true;
+        lastPointRef.current = null;
+        const touch = e.touches[0];
+        scratch(touch.clientX, touch.clientY);
+      }
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      if (isRevealedRef.current) return;
+      if (e.touches.length === 1) {
+        if (e.cancelable) e.preventDefault();
+        const touch = e.touches[0];
+        scratch(touch.clientX, touch.clientY);
+        checkScratchPercentage();
+      }
+    };
+
+    const handleTouchEnd = () => {
+      isDrawingRef.current = false;
+      lastPointRef.current = null;
+      checkScratchPercentage();
+    };
+
+    canvas.addEventListener("touchstart", handleTouchStart, { passive: false });
+    canvas.addEventListener("touchmove", handleTouchMove, { passive: false });
+    canvas.addEventListener("touchend", handleTouchEnd, { passive: true });
+    canvas.addEventListener("touchcancel", handleTouchEnd, { passive: true });
+
+    return () => {
+      canvas.removeEventListener("touchstart", handleTouchStart);
+      canvas.removeEventListener("touchmove", handleTouchMove);
+      canvas.removeEventListener("touchend", handleTouchEnd);
+      canvas.removeEventListener("touchcancel", handleTouchEnd);
+    };
+  }, [scratch, checkScratchPercentage]);
+
+  // Pointer event handlers (Universal mouse + desktop support with pointer capture)
   const handlePointerDown = (e: React.PointerEvent<HTMLCanvasElement>) => {
     isDrawingRef.current = true;
     lastPointRef.current = null;
@@ -282,7 +361,9 @@ export default function ScratchDateCard({ onRevealed }: ScratchDateCardProps) {
   // Reveal instantly button
   const handleRevealAll = () => {
     setIsRevealed(true);
+    isRevealedRef.current = true;
     setScratchPercent(100);
+    scratchPercentRef.current = 100;
     fireCelebration();
     if (onRevealed) onRevealed();
   };
@@ -290,7 +371,9 @@ export default function ScratchDateCard({ onRevealed }: ScratchDateCardProps) {
   // Reset & scratch again
   const handleReset = () => {
     setIsRevealed(false);
+    isRevealedRef.current = false;
     setScratchPercent(0);
+    scratchPercentRef.current = 0;
     const canvas = canvasRef.current;
     const container = containerRef.current;
     if (canvas && container) {

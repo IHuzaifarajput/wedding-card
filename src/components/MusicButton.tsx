@@ -11,56 +11,53 @@ export default function MusicButton() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const hasStartedRef = useRef(false);
 
-  // Autoplay handler: tries immediate autoplay, and falls back to first touch/click/scroll
+  const removeListenersRef = useRef<() => void>(() => {});
+
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
 
     audio.volume = 0.9;
 
-    const playAudio = () => {
+    const tryPlay = () => {
       if (hasStartedRef.current) return;
-      audio
-        .play()
-        .then(() => {
-          hasStartedRef.current = true;
-          setIsPlaying(true);
-          removeListeners();
-        })
-        .catch(() => {
-          // Browser autoplay policy prevented sound without user gesture
-        });
+      const playPromise = audio.play();
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            hasStartedRef.current = true;
+            setIsPlaying(true);
+            removeListenersRef.current();
+          })
+          .catch(() => {
+            // Mobile browser (iOS Safari) policy: waiting for user touch gesture
+          });
+      }
     };
 
-    const handleFirstGesture = () => {
-      if (hasStartedRef.current) return;
-      audio
-        .play()
-        .then(() => {
-          hasStartedRef.current = true;
-          setIsPlaying(true);
-          removeListeners();
-        })
-        .catch(() => {
-          // If interaction still pending
-        });
+    const handleUserInteraction = () => {
+      tryPlay();
     };
 
     const removeListeners = () => {
-      window.removeEventListener("click", handleFirstGesture);
-      window.removeEventListener("touchstart", handleFirstGesture);
-      window.removeEventListener("scroll", handleFirstGesture);
-      window.removeEventListener("keydown", handleFirstGesture);
+      window.removeEventListener("click", handleUserInteraction);
+      window.removeEventListener("touchstart", handleUserInteraction);
+      window.removeEventListener("touchend", handleUserInteraction);
+      window.removeEventListener("scroll", handleUserInteraction);
+      window.removeEventListener("pointerdown", handleUserInteraction);
     };
 
-    // 1. Try immediate autoplay right on page load
-    playAudio();
+    removeListenersRef.current = removeListeners;
 
-    // 2. Fallback: On the very first tap, scroll, or click anywhere on screen, start music
-    window.addEventListener("click", handleFirstGesture, { passive: true, once: true });
-    window.addEventListener("touchstart", handleFirstGesture, { passive: true, once: true });
-    window.addEventListener("scroll", handleFirstGesture, { passive: true, once: true });
-    window.addEventListener("keydown", handleFirstGesture, { passive: true, once: true });
+    // Try immediate autoplay (works on desktop Chrome/Edge/Firefox if allowed)
+    tryPlay();
+
+    // Listen on any user touch/tap anywhere on the page for iOS Safari / Mobile
+    window.addEventListener("touchstart", handleUserInteraction, { passive: true });
+    window.addEventListener("touchend", handleUserInteraction, { passive: true });
+    window.addEventListener("click", handleUserInteraction, { passive: true });
+    window.addEventListener("pointerdown", handleUserInteraction, { passive: true });
+    window.addEventListener("scroll", handleUserInteraction, { passive: true });
 
     return () => {
       removeListeners();
@@ -77,27 +74,34 @@ export default function MusicButton() {
     } else {
       try {
         hasStartedRef.current = true;
-        await audio.play();
+        removeListenersRef.current();
+        const playPromise = audio.play();
+        if (playPromise !== undefined) {
+          await playPromise;
+        }
         setIsPlaying(true);
       } catch (err) {
-        console.warn("Audio play notice:", err);
+        console.warn("Direct play error:", err);
+        setToastMessage("Tap once to enable music");
+        setTimeout(() => setToastMessage(null), 3000);
       }
     }
   };
 
   return (
     <>
-      {/* Audio element with multiple sources for 100% device compatibility */}
+      {/* Audio element with Apple AAC format first for iOS Safari / iPhone compatibility */}
       <audio
         ref={audioRef}
+        src="/mahi-ta-mera.m4a"
         preload="auto"
         loop
+        playsInline
         onPlay={() => setIsPlaying(true)}
         onPause={() => setIsPlaying(false)}
       >
+        <source src="/mahi-ta-mera.m4a" type="audio/mp4" />
         <source src="/mahi-ta-mera.mp4" type="audio/mp4" />
-        <source src="/kudmayi.mp3" type="audio/mpeg" />
-        <source src="/kudmayi.wav" type="audio/wav" />
       </audio>
 
       {/* Floating Control Button */}
@@ -124,7 +128,7 @@ export default function MusicButton() {
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={toggleMusic}
-          aria-label={isPlaying ? "Pause background music" : "Play background music: Mahi Ta Mera"}
+          aria-label={isPlaying ? "Pause background music" : `Play background music: ${eventConfig.music.title}`}
           className={`group relative flex items-center gap-2.5 sm:gap-3 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-full shadow-2xl border transition-colors duration-300 backdrop-blur-md focus:outline-none focus:ring-2 focus:ring-[#BA8A45] ${
             isPlaying
               ? "bg-[#370914]/95 text-[#D7B87B] border-[#BA8A45] shadow-[0_0_25px_rgba(186,138,69,0.45)]"

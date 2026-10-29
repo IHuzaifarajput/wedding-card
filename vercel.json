@@ -1,4 +1,20 @@
 {
-  "framework": "nextjs"
+  "framework": "nextjs",
+  "headers": [
+    {
+      "source": "/mahi-ta-mera.m4a",
+      "headers": [
+        { "key": "Content-Type", "value": "audio/mp4" },
+        { "key": "Accept-Ranges", "value": "bytes" }
+      ]
+    },
+    {
+      "source": "/mahi-ta-mera.mp4",
+      "headers": [
+        { "key": "Content-Type", "value": "audio/mp4" },
+        { "key": "Accept-Ranges", "value": "bytes" }
+      ]
+    }
+  ]
 }
 

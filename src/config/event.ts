@@ -93,7 +93,7 @@ export const eventConfig: EventConfig = {
   ],
   music: {
     title: "Mahi Ta Mera",
-    src: "/kudmayi.mp3",
+    src: "/mahi-ta-mera.m4a",
   },
   meta: {
     title: "Huziafa & Kashaf | Valima Celebration",
