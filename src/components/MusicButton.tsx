@@ -9,122 +9,78 @@ export default function MusicButton() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const synthContextRef = useRef<AudioContext | null>(null);
-  const synthIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const hasStartedRef = useRef(false);
 
-  // Web Audio Synthesizer Fallback if audio file cannot be loaded
-  const startSynthFallback = useCallback(() => {
-    try {
-      const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
-      if (!AudioCtx) return;
-
-      const ctx = synthContextRef.current || new AudioCtx();
-      synthContextRef.current = ctx;
-
-      if (ctx.state === "suspended") {
-        ctx.resume();
-      }
-
-      // Melodic notes sequence (D major wedding raag)
-      const notes = [
-        293.66, 369.99, 440.0, 587.33, 554.37, 440.0, 369.99, 293.66,
-        392.0, 493.88, 587.33, 739.99, 659.25, 493.88, 392.0, 329.63,
-      ];
-      let step = 0;
-
-      const playNote = () => {
-        if (!synthContextRef.current || synthContextRef.current.state !== "running") return;
-        const now = ctx.currentTime;
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-
-        const freq = notes[step % notes.length];
-        step++;
-
-        osc.type = "sine";
-        osc.frequency.setValueAtTime(freq, now);
-
-        // Acoustic envelope
-        gain.gain.setValueAtTime(0.001, now);
-        gain.gain.linearRampToValueAtTime(0.2, now + 0.04);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 1.2);
-
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-
-        osc.start(now);
-        osc.stop(now + 1.25);
-      };
-
-      playNote();
-      synthIntervalRef.current = setInterval(playNote, 450);
-      setIsPlaying(true);
-    } catch {
-      // safe fallback
-    }
-  }, []);
-
-  const stopSynthFallback = useCallback(() => {
-    if (synthIntervalRef.current) {
-      clearInterval(synthIntervalRef.current);
-      synthIntervalRef.current = null;
-    }
-    if (synthContextRef.current) {
-      synthContextRef.current.suspend();
-    }
-    setIsPlaying(false);
-  }, []);
-
+  // Autoplay handler: tries immediate autoplay, and falls back to first touch/click/scroll
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
 
     audio.volume = 0.9;
 
-    const handleError = () => {
-      // Audio element failed or format not decoded, fallback to synth
-      if (isPlaying) {
-        startSynthFallback();
-      }
+    const playAudio = () => {
+      if (hasStartedRef.current) return;
+      audio
+        .play()
+        .then(() => {
+          hasStartedRef.current = true;
+          setIsPlaying(true);
+          removeListeners();
+        })
+        .catch(() => {
+          // Browser autoplay policy prevented sound without user gesture
+        });
     };
 
-    const handleEnded = () => {
-      setIsPlaying(false);
+    const handleFirstGesture = () => {
+      if (hasStartedRef.current) return;
+      audio
+        .play()
+        .then(() => {
+          hasStartedRef.current = true;
+          setIsPlaying(true);
+          removeListeners();
+        })
+        .catch(() => {
+          // If interaction still pending
+        });
     };
 
-    audio.addEventListener("error", handleError);
-    audio.addEventListener("ended", handleEnded);
+    const removeListeners = () => {
+      window.removeEventListener("click", handleFirstGesture);
+      window.removeEventListener("touchstart", handleFirstGesture);
+      window.removeEventListener("scroll", handleFirstGesture);
+      window.removeEventListener("keydown", handleFirstGesture);
+    };
+
+    // 1. Try immediate autoplay right on page load
+    playAudio();
+
+    // 2. Fallback: On the very first tap, scroll, or click anywhere on screen, start music
+    window.addEventListener("click", handleFirstGesture, { passive: true, once: true });
+    window.addEventListener("touchstart", handleFirstGesture, { passive: true, once: true });
+    window.addEventListener("scroll", handleFirstGesture, { passive: true, once: true });
+    window.addEventListener("keydown", handleFirstGesture, { passive: true, once: true });
 
     return () => {
-      audio.removeEventListener("error", handleError);
-      audio.removeEventListener("ended", handleEnded);
-      stopSynthFallback();
+      removeListeners();
     };
-  }, [isPlaying, startSynthFallback, stopSynthFallback]);
+  }, []);
 
   const toggleMusic = async () => {
     const audio = audioRef.current;
+    if (!audio) return;
 
     if (isPlaying) {
-      // Pause
-      if (audio && !audio.paused) {
-        audio.pause();
-      }
-      stopSynthFallback();
+      audio.pause();
       setIsPlaying(false);
     } else {
-      // Play
-      if (audio) {
-        try {
-          audio.currentTime = 0;
-          await audio.play();
-          setIsPlaying(true);
-        } catch {
-          // If browser policy or file decode fails, use synthesizer
-          startSynthFallback();
-        }
-      } else {
-        startSynthFallback();
+      try {
+        hasStartedRef.current = true;
+        await audio.play();
+        setIsPlaying(true);
+      } catch (err) {
+        console.warn("Audio play notice:", err);
       }
     }
   };
@@ -168,7 +124,7 @@ export default function MusicButton() {
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={toggleMusic}
-          aria-label={isPlaying ? "Pause background music" : "Play background music: Kudmayi"}
+          aria-label={isPlaying ? "Pause background music" : "Play background music: Mahi Ta Mera"}
           className={`group relative flex items-center gap-2.5 sm:gap-3 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-full shadow-2xl border transition-colors duration-300 backdrop-blur-md focus:outline-none focus:ring-2 focus:ring-[#BA8A45] ${
             isPlaying
               ? "bg-[#370914]/95 text-[#D7B87B] border-[#BA8A45] shadow-[0_0_25px_rgba(186,138,69,0.45)]"
