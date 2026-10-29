@@ -7,6 +7,8 @@ import { Phone, Users } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function Contact() {
+  const isSingle = eventConfig.contacts.length === 1;
+
   return (
     <section className="relative w-full py-16 sm:py-24 px-4 bg-[#F9F4E9] text-[#30271F] overflow-hidden">
       <motion.div
@@ -23,7 +25,7 @@ export default function Contact() {
 
         {/* Heading */}
         <h2 className="font-serif text-3xl sm:text-4xl text-[#4E0F1D] font-normal tracking-wide">
-          Contact Our Families
+          Contact Our Family
         </h2>
 
         <div className="max-w-xs mx-auto my-4 sm:my-6">
@@ -34,8 +36,12 @@ export default function Contact() {
           “For any questions regarding the celebration, feel free to reach out.”
         </p>
 
-        {/* Two Contact Cards with Framer Motion hover and stagger */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 max-w-lg mx-auto">
+        {/* Contact Card(s) */}
+        <div
+          className={`grid grid-cols-1 ${
+            isSingle ? "max-w-xs" : "sm:grid-cols-2 max-w-lg"
+          } gap-4 sm:gap-6 mx-auto justify-center`}
+        >
           {eventConfig.contacts.map((contact, index) => (
             <motion.div
               key={index}

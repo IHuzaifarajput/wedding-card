@@ -90,11 +90,6 @@ export const eventConfig: EventConfig = {
       phoneDisplay: "+92 300 1234567",
       phoneRaw: "+923001234567",
     },
-    {
-      role: "Kashaf’s Family",
-      phoneDisplay: "+92 321 1234567",
-      phoneRaw: "+923211234567",
-    },
   ],
   music: {
     title: "Kudmayi",
