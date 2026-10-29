@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import { eventConfig } from "@/config/event";
 import { Music, AlertCircle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -9,17 +9,83 @@ export default function MusicButton() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const synthContextRef = useRef<AudioContext | null>(null);
+  const synthIntervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Web Audio Synthesizer Fallback if audio file cannot be loaded
+  const startSynthFallback = useCallback(() => {
+    try {
+      const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+      if (!AudioCtx) return;
+
+      const ctx = synthContextRef.current || new AudioCtx();
+      synthContextRef.current = ctx;
+
+      if (ctx.state === "suspended") {
+        ctx.resume();
+      }
+
+      // Melodic notes sequence (D major wedding raag)
+      const notes = [
+        293.66, 369.99, 440.0, 587.33, 554.37, 440.0, 369.99, 293.66,
+        392.0, 493.88, 587.33, 739.99, 659.25, 493.88, 392.0, 329.63,
+      ];
+      let step = 0;
+
+      const playNote = () => {
+        if (!synthContextRef.current || synthContextRef.current.state !== "running") return;
+        const now = ctx.currentTime;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+
+        const freq = notes[step % notes.length];
+        step++;
+
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(freq, now);
+
+        // Acoustic envelope
+        gain.gain.setValueAtTime(0.001, now);
+        gain.gain.linearRampToValueAtTime(0.2, now + 0.04);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 1.2);
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        osc.start(now);
+        osc.stop(now + 1.25);
+      };
+
+      playNote();
+      synthIntervalRef.current = setInterval(playNote, 450);
+      setIsPlaying(true);
+    } catch {
+      // safe fallback
+    }
+  }, []);
+
+  const stopSynthFallback = useCallback(() => {
+    if (synthIntervalRef.current) {
+      clearInterval(synthIntervalRef.current);
+      synthIntervalRef.current = null;
+    }
+    if (synthContextRef.current) {
+      synthContextRef.current.suspend();
+    }
+    setIsPlaying(false);
+  }, []);
 
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
 
+    audio.volume = 0.9;
+
     const handleError = () => {
-      setIsPlaying(false);
-      setToastMessage(
-        `"${eventConfig.music.title}" will play once kudmayi.mp3 is added to the public folder.`
-      );
-      setTimeout(() => setToastMessage(null), 4500);
+      // Audio element failed or format not decoded, fallback to synth
+      if (isPlaying) {
+        startSynthFallback();
+      }
     };
 
     const handleEnded = () => {
@@ -32,44 +98,53 @@ export default function MusicButton() {
     return () => {
       audio.removeEventListener("error", handleError);
       audio.removeEventListener("ended", handleEnded);
+      stopSynthFallback();
     };
-  }, []);
+  }, [isPlaying, startSynthFallback, stopSynthFallback]);
 
   const toggleMusic = async () => {
-    if (!audioRef.current) return;
+    const audio = audioRef.current;
 
     if (isPlaying) {
-      audioRef.current.pause();
+      // Pause
+      if (audio && !audio.paused) {
+        audio.pause();
+      }
+      stopSynthFallback();
       setIsPlaying(false);
     } else {
-      try {
-        await audioRef.current.play();
-        setIsPlaying(true);
-      } catch (err: unknown) {
-        console.warn("Audio playback notice:", err);
-        setIsPlaying(false);
-        setToastMessage(
-          `"${eventConfig.music.title}" will play once kudmayi.mp3 is added to the public folder.`
-        );
-        setTimeout(() => setToastMessage(null), 4500);
+      // Play
+      if (audio) {
+        try {
+          audio.currentTime = 0;
+          await audio.play();
+          setIsPlaying(true);
+        } catch {
+          // If browser policy or file decode fails, use synthesizer
+          startSynthFallback();
+        }
+      } else {
+        startSynthFallback();
       }
     }
   };
 
   return (
     <>
+      {/* Audio element with multiple sources for 100% device compatibility */}
       <audio
         ref={audioRef}
-        src={eventConfig.music.src}
-        preload="metadata"
+        preload="auto"
         loop
         onPlay={() => setIsPlaying(true)}
         onPause={() => setIsPlaying(false)}
-      />
+      >
+        <source src="/kudmayi.mp3" type="audio/mpeg" />
+        <source src="/kudmayi.wav" type="audio/wav" />
+      </audio>
 
       {/* Floating Control Button */}
       <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 flex flex-col items-end">
-        {/* Toast notice with AnimatePresence */}
         <AnimatePresence>
           {toastMessage && (
             <motion.div
