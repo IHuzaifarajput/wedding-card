@@ -34,13 +34,10 @@ export default function EventDate() {
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         className="max-w-3xl mx-auto text-center px-4 relative z-10"
       >
-        {/* Eyebrow & Title */}
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/70 border border-[#BA8A45]/30 mb-2">
-          <Sparkles className="w-3.5 h-3.5 text-[#BA8A45]" />
-          <p className="font-sans text-xs uppercase tracking-[0.25em] text-[#BA8A45] font-semibold">
-            Interactive Invitation
-          </p>
-        </div>
+        {/* Section Heading */}
+        <p className="font-sans text-xs sm:text-sm uppercase tracking-[0.3em] text-[#BA8A45] font-semibold mb-2">
+          Save The Date
+        </p>
 
         <h2 className="font-serif text-3xl sm:text-5xl text-[#4E0F1D] font-normal tracking-wide">
           Our Special Day

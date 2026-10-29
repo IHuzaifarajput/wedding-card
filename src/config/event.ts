@@ -92,7 +92,7 @@ export const eventConfig: EventConfig = {
     },
   ],
   music: {
-    title: "Kudmayi",
+    title: "Mahi Ta Mera",
     src: "/kudmayi.mp3",
   },
   meta: {

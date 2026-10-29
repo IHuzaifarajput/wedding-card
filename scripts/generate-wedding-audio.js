@@ -174,3 +174,4 @@ fs.writeFileSync(path.join(publicDir, "kudmayi.mp3"), wavBuffer);
 console.log("Successfully generated romantic wedding instrumental music!");
 console.log("Duration:", (totalDuration).toFixed(1), "seconds");
 console.log("File size:", (wavBuffer.length / 1024 / 1024).toFixed(2), "MB");
+

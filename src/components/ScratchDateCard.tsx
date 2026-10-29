@@ -314,7 +314,7 @@ export default function ScratchDateCard({ onRevealed }: ScratchDateCardProps) {
       <div className="mb-3 flex items-center justify-between w-full px-2 text-xs font-sans">
         <span className="inline-flex items-center gap-1.5 text-[#BA8A45] font-semibold tracking-wider uppercase">
           <Sparkles className="w-3.5 h-3.5 text-[#D7B87B] animate-spin" style={{ animationDuration: "6s" }} />
-          {isRevealed ? "✨ Date Revealed!" : "Interactive Scratch Card"}
+          {isRevealed ? "✨ Date Revealed!" : "Scratch To Uncover"}
         </span>
 
         {!isRevealed && scratchPercent > 0 && (
