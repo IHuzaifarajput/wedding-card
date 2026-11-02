@@ -39,7 +39,7 @@ export default function Contact() {
         {/* Contact Card(s) */}
         <div
           className={`grid grid-cols-1 ${
-            isSingle ? "max-w-xs" : "sm:grid-cols-2 max-w-lg"
+            isSingle ? "max-w-xs" : "sm:grid-cols-2 max-w-2xl"
           } gap-4 sm:gap-6 mx-auto justify-center`}
         >
           {eventConfig.contacts.map((contact, index) => (

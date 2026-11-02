@@ -79,15 +79,30 @@ export const eventConfig: EventConfig = {
     note: "We can’t wait to celebrate with you.",
   },
   whatsapp: {
-    phoneNumber: "923001234567",
+    phoneNumber: "923278282965",
     confirmationMessage:
       "Assalam-o-Alaikum! Thank you for inviting me to Huziafa’s Valima (with Daughter of Kamran Ahmed). I’m happy to confirm that I’ll be joining you on 28 December 2026. ❤️",
   },
   contacts: [
     {
       role: "Huziafa’s Family",
-      phoneDisplay: "+92 300 1234567",
-      phoneRaw: "+923001234567",
+      phoneDisplay: "+92 327 8282965",
+      phoneRaw: "+923278282965",
+    },
+    {
+      role: "Huziafa’s Family",
+      phoneDisplay: "+92 335 3392927",
+      phoneRaw: "+923353392927",
+    },
+    {
+      role: "Huziafa’s Family",
+      phoneDisplay: "+92 336 4367059",
+      phoneRaw: "+923364367059",
+    },
+    {
+      role: "Huziafa’s Family",
+      phoneDisplay: "+92 311 5772711",
+      phoneRaw: "+923115772711",
     },
   ],
   music: {
