@@ -75,7 +75,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 35 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
-          className="font-serif text-5xl sm:text-7xl md:text-8xl lg:text-9xl tracking-[0.16em] uppercase text-[#F9F4E9] font-normal leading-none drop-shadow-lg"
+          className="font-serif text-4xl sm:text-6xl md:text-7xl lg:text-8xl tracking-[0.16em] uppercase text-[#F9F4E9] font-normal leading-none drop-shadow-lg"
         >
           {eventConfig.couple.groom}
         </motion.h1>
@@ -85,33 +85,29 @@ export default function Hero() {
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.9, delay: 0.65 }}
-          className="font-script text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-[#D7B87B] my-0 sm:-my-1 md:-my-2 font-normal transform -rotate-3 filter drop-shadow"
+          className="font-script text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-[#D7B87B] my-1 sm:my-2 font-normal transform -rotate-3 filter drop-shadow"
         >
           with
         </motion.span>
 
-        {/* Bride Name or Parentage */}
-        <motion.div
+        {/* Bride Name: Same size as Groom */}
+        <motion.h2
           initial={{ opacity: 0, y: 35 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.75, ease: [0.16, 1, 0.3, 1] }}
-          className="flex flex-col items-center mt-1 sm:mt-2"
+          className="font-serif text-4xl sm:text-6xl md:text-7xl lg:text-8xl tracking-[0.16em] uppercase text-[#F9F4E9] font-normal leading-tight drop-shadow-lg"
         >
           {eventConfig.couple.bride.toLowerCase().startsWith("daughter of") ? (
             <>
-              <span className="font-sans text-[11px] sm:text-xs md:text-sm uppercase tracking-[0.35em] text-[#D7B87B] font-medium mb-1.5 sm:mb-2">
-                Daughter of
+              <span className="block">DAUGHTER OF</span>
+              <span className="block mt-1 sm:mt-2">
+                {eventConfig.couple.bride.replace(/^daughter of\s*/i, "").toUpperCase()}
               </span>
-              <h2 className="font-serif text-3xl sm:text-5xl md:text-6xl lg:text-7xl tracking-[0.14em] uppercase text-[#F9F4E9] font-normal leading-tight drop-shadow-lg">
-                {eventConfig.couple.bride.replace(/^daughter of\s*/i, "")}
-              </h2>
             </>
           ) : (
-            <h2 className="font-serif text-5xl sm:text-7xl md:text-8xl lg:text-9xl tracking-[0.16em] uppercase text-[#F9F4E9] font-normal leading-none drop-shadow-lg">
-              {eventConfig.couple.bride}
-            </h2>
+            eventConfig.couple.bride
           )}
-        </motion.div>
+        </motion.h2>
 
         {/* Elegant Gold Divider with width reveal */}
         <motion.div

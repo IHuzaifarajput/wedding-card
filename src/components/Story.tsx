@@ -3,8 +3,8 @@
 import React from "react";
 import { eventConfig } from "@/config/event";
 import { GoldDivider, CornerOrnament } from "./Ornaments";
-import GoldSparkles from "./GoldSparkles";
 import { motion } from "framer-motion";
+import GoldSparkles from "./GoldSparkles";
 
 export default function Story() {
   return (
@@ -18,7 +18,7 @@ export default function Story() {
         aria-hidden="true"
       />
 
-      {/* Subtle oversized background initials watermark: H with floating animation */}
+      {/* Subtle oversized background initials watermark: H & K with floating animation */}
       <div
         className="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden"
         aria-hidden="true"
@@ -28,7 +28,7 @@ export default function Story() {
           transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
           className="font-serif text-[120px] sm:text-[190px] md:text-[260px] lg:text-[320px] font-extralight text-[#BA8A45]/[0.08] tracking-widest leading-none"
         >
-          H
+          H &amp; K
         </motion.span>
       </div>
 
