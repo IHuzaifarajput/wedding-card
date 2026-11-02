@@ -56,8 +56,8 @@ export default function Footer() {
           </p>
           <div className="pt-2 text-sm sm:text-base text-[#D7B87B]">
             <p>With love,</p>
-            <p className="font-script text-2xl sm:text-3xl text-[#F9F4E9] mt-1">
-              Huziafa &amp; Kashaf
+            <p className="font-serif text-lg sm:text-xl text-[#F9F4E9] mt-1 font-normal">
+              Huziafa <span className="font-script text-2xl sm:text-3xl text-[#D7B87B] px-1 font-normal">with</span> {eventConfig.couple.bride}
             </p>
           </div>
         </div>

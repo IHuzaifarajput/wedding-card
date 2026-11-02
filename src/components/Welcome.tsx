@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { eventConfig } from "@/config/event";
 import { GoldDivider, FloralMedallion } from "./Ornaments";
 import { motion } from "framer-motion";
 
@@ -63,10 +64,10 @@ export default function Welcome() {
           </div>
 
           {/* Subtle signature ornament */}
-          <div className="mt-8 pt-6 border-t border-[#BA8A45]/25 flex items-center justify-center gap-2 text-xs font-sans tracking-[0.25em] uppercase text-[#BA8A45]">
+          <div className="mt-8 pt-6 border-t border-[#BA8A45]/25 flex flex-wrap items-center justify-center gap-2 text-xs font-sans tracking-[0.25em] uppercase text-[#BA8A45]">
             <span className="font-medium">Huziafa</span>
-            <span className="font-script text-lg text-[#4E0F1D] lowercase px-1">&amp;</span>
-            <span className="font-medium">Kashaf</span>
+            <span className="font-script text-base text-[#4E0F1D] lowercase px-1">with</span>
+            <span className="font-medium">{eventConfig.couple.bride}</span>
           </div>
         </motion.div>
       </motion.div>

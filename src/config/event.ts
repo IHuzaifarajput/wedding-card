@@ -51,7 +51,7 @@ export interface EventConfig {
 export const eventConfig: EventConfig = {
   couple: {
     groom: "HUZIAFA",
-    bride: "KASHAF",
+    bride: "Daughter of Kamran Ahmed",
     tagline: "Two hearts. One promise. A beautiful beginning.",
     storySubtitle: "Two lives, two families, and one beautiful new beginning.",
   },
@@ -71,18 +71,17 @@ export const eventConfig: EventConfig = {
       "With love in our hearts and the blessings of our families, we invite you to be part of a day that means the world to us.\n\nJoin us as we celebrate the beginning of our forever.",
   },
   venue: {
-    heading: "Valima Celebration",
-    area: "Gulistan-e-Johar",
+    heading: "Grand Hayat Luxury Banquet",
+    area: "Johar Hill Road, Block 1, Gulistan-e-Johar",
     city: "Karachi, Pakistan",
-    plusCode: "W4GF+9P Gulistan-e-Johar, Karachi, Pakistan",
-    mapUrl:
-      "https://www.google.com/maps/search/?api=1&query=W4GF%2B9P%20Gulistan-e-Johar%2C%20Karachi%2C%20Pakistan",
+    plusCode: "W4GF+9P Karachi, Pakistan",
+    mapUrl: "https://maps.app.goo.gl/UuqkycSs9goaqsxU7",
     note: "We can’t wait to celebrate with you.",
   },
   whatsapp: {
     phoneNumber: "923001234567",
     confirmationMessage:
-      "Assalam-o-Alaikum! Thank you for inviting me to Huziafa & Kashaf’s Valima. I’m happy to confirm that I’ll be joining you on 28 December 2026. ❤️",
+      "Assalam-o-Alaikum! Thank you for inviting me to Huziafa’s Valima (with Daughter of Kamran Ahmed). I’m happy to confirm that I’ll be joining you on 28 December 2026. ❤️",
   },
   contacts: [
     {
@@ -96,9 +95,9 @@ export const eventConfig: EventConfig = {
     src: "/mahi-ta-mera.m4a",
   },
   meta: {
-    title: "Huziafa & Kashaf | Valima Celebration",
+    title: "Huziafa & Daughter of Kamran Ahmed | Valima Celebration",
     description:
-      "You are warmly invited to the Valima celebration of Huziafa & Kashaf on 28 December 2026 in Karachi.",
+      "You are warmly invited to the Valima celebration of Huziafa with Daughter of Kamran Ahmed on 28 December 2026 at Grand Hayat Luxury Banquet, Karachi.",
     ogImage: "/og-image.jpg",
   },
 };

@@ -90,15 +90,28 @@ export default function Hero() {
           with
         </motion.span>
 
-        {/* Bride Name */}
-        <motion.h2
+        {/* Bride Name or Parentage */}
+        <motion.div
           initial={{ opacity: 0, y: 35 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.75, ease: [0.16, 1, 0.3, 1] }}
-          className="font-serif text-5xl sm:text-7xl md:text-8xl lg:text-9xl tracking-[0.16em] uppercase text-[#F9F4E9] font-normal leading-none drop-shadow-lg"
+          className="flex flex-col items-center mt-1 sm:mt-2"
         >
-          {eventConfig.couple.bride}
-        </motion.h2>
+          {eventConfig.couple.bride.toLowerCase().startsWith("daughter of") ? (
+            <>
+              <span className="font-sans text-[11px] sm:text-xs md:text-sm uppercase tracking-[0.35em] text-[#D7B87B] font-medium mb-1.5 sm:mb-2">
+                Daughter of
+              </span>
+              <h2 className="font-serif text-3xl sm:text-5xl md:text-6xl lg:text-7xl tracking-[0.14em] uppercase text-[#F9F4E9] font-normal leading-tight drop-shadow-lg">
+                {eventConfig.couple.bride.replace(/^daughter of\s*/i, "")}
+              </h2>
+            </>
+          ) : (
+            <h2 className="font-serif text-5xl sm:text-7xl md:text-8xl lg:text-9xl tracking-[0.16em] uppercase text-[#F9F4E9] font-normal leading-none drop-shadow-lg">
+              {eventConfig.couple.bride}
+            </h2>
+          )}
+        </motion.div>
 
         {/* Elegant Gold Divider with width reveal */}
         <motion.div

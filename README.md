@@ -1,4 +1,4 @@
-# Huziafa & Kashaf — Valima Celebration Invitation
+# Huziafa with Daughter of Kamran Ahmed — Valima Celebration Invitation
 
 A luxury, responsive one-page digital wedding invitation website built with Next.js (App Router), TypeScript, and Tailwind CSS.
 
@@ -33,7 +33,7 @@ All event details are centralized in one single configuration file: [`src/config
 export const eventConfig = {
   couple: {
     groom: "HUZIAFA",
-    bride: "KASHAF",
+    bride: "Daughter of Kamran Ahmed",
     tagline: "Two hearts. One promise. A beautiful beginning.",
     storySubtitle: "Two lives, two families, and one beautiful new beginning.",
   },
@@ -52,24 +52,23 @@ export const eventConfig = {
     welcomeText: "...",
   },
   venue: {
-    heading: "Valima Celebration",
-    area: "Gulistan-e-Johar",
+    heading: "Grand Hayat Luxury Banquet",
+    area: "Johar Hill Road, Block 1, Gulistan-e-Johar",
     city: "Karachi, Pakistan",
-    plusCode: "W4GF+9P Gulistan-e-Johar, Karachi, Pakistan",
-    mapUrl: "https://www.google.com/maps/search/?api=1&query=W4GF%2B9P%20Gulistan-e-Johar%2C%20Karachi%2C%20Pakistan",
+    plusCode: "W4GF+9P Karachi, Pakistan",
+    mapUrl: "https://maps.app.goo.gl/UuqkycSs9goaqsxU7",
     note: "We can’t wait to celebrate with you.",
   },
   whatsapp: {
     phoneNumber: "923001234567",
-    confirmationMessage: "Assalam-o-Alaikum! Thank you for inviting me to Huziafa & Kashaf’s Valima. I’m happy to confirm that I’ll be joining you on 28 December 2026. ❤️",
+    confirmationMessage: "Assalam-o-Alaikum! Thank you for inviting me to Huziafa’s Valima (with Daughter of Kamran Ahmed). I’m happy to confirm that I’ll be joining you on 28 December 2026. ❤️",
   },
   contacts: [
     { role: "Huziafa’s Family", phoneDisplay: "+92 300 1234567", phoneRaw: "+923001234567" },
-    { role: "Kashaf’s Family", phoneDisplay: "+92 321 1234567", phoneRaw: "+923211234567" },
   ],
   music: {
-    title: "Kudmayi",
-    src: "/kudmayi.mp3",
+    title: "Mahi Ta Mera",
+    src: "/mahi-ta-mera.m4a",
   },
 };
 ```

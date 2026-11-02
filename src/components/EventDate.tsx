@@ -11,13 +11,15 @@ export default function EventDate() {
   const [copied, setCopied] = useState(false);
 
   const googleCalendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(
-    "Valima Celebration: Huziafa & Kashaf"
+    "Valima Celebration: Huziafa with Daughter of Kamran Ahmed"
   )}&dates=20261228T140000Z/20261228T190000Z&details=${encodeURIComponent(
-    "Valima Celebration of Huziafa and Kashaf at Gulistan-e-Johar, Karachi, Pakistan."
-  )}&location=${encodeURIComponent(eventConfig.venue.plusCode)}`;
+    "Valima Celebration of Huziafa with Daughter of Kamran Ahmed at Grand Hayat Luxury Banquet, Gulistan-e-Johar, Karachi, Pakistan."
+  )}&location=${encodeURIComponent(eventConfig.venue.heading + ", " + eventConfig.venue.area + ", " + eventConfig.venue.city)}`;
 
   const handleCopyDate = () => {
-    navigator.clipboard.writeText("28 December 2026 - Valima of Huziafa & Kashaf");
+    navigator.clipboard.writeText(
+      "28 December 2026 - Valima of Huziafa with Daughter of Kamran Ahmed at Grand Hayat Luxury Banquet, Karachi"
+    );
     setCopied(true);
     setTimeout(() => setCopied(false), 2500);
   };

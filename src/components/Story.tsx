@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { eventConfig } from "@/config/event";
 import { GoldDivider, CornerOrnament } from "./Ornaments";
 import GoldSparkles from "./GoldSparkles";
 import { motion } from "framer-motion";
@@ -17,7 +18,7 @@ export default function Story() {
         aria-hidden="true"
       />
 
-      {/* Subtle oversized background initials watermark: H & K with floating animation */}
+      {/* Subtle oversized background initials watermark: H with floating animation */}
       <div
         className="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden"
         aria-hidden="true"
@@ -27,7 +28,7 @@ export default function Story() {
           transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
           className="font-serif text-[120px] sm:text-[190px] md:text-[260px] lg:text-[320px] font-extralight text-[#BA8A45]/[0.08] tracking-widest leading-none"
         >
-          H &amp; K
+          H
         </motion.span>
       </div>
 
@@ -78,14 +79,14 @@ export default function Story() {
               And then, somehow, two separate journeys find their way to the same destination.
             </p>
 
-            {/* Script Couple Names Accent */}
+            {/* Couple Names Accent */}
             <div className="py-2">
               <motion.span
-                whileHover={{ scale: 1.05 }}
+                whileHover={{ scale: 1.03 }}
                 transition={{ type: "spring", stiffness: 300 }}
-                className="font-script text-4xl sm:text-5xl md:text-6xl text-[#D7B87B] inline-block transform -rotate-1 cursor-default"
+                className="font-serif text-2xl sm:text-3xl md:text-4xl text-[#EEE2CF] inline-block font-normal cursor-default tracking-wide"
               >
-                Huziafa &amp; Kashaf
+                Huziafa <span className="font-script text-3xl sm:text-4xl md:text-5xl text-[#D7B87B] px-1 font-normal">with</span> {eventConfig.couple.bride}
               </motion.span>
             </div>
 

@@ -33,22 +33,31 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://huziafa-kashaf-valima.com"),
+  metadataBase: new URL("https://wedding-card-alpha-two.vercel.app"),
   title: eventConfig.meta.title,
   description: eventConfig.meta.description,
-  authors: [{ name: "Huziafa & Kashaf" }],
-  keywords: ["Valima", "Wedding Invitation", "Huziafa", "Kashaf", "Karachi", "Pakistan", "Valima Celebration"],
+  authors: [{ name: "Huziafa" }],
+  keywords: [
+    "Valima",
+    "Wedding Invitation",
+    "Huziafa",
+    "Kamran Ahmed",
+    "Grand Hayat Luxury Banquet",
+    "Karachi",
+    "Pakistan",
+    "Valima Celebration",
+  ],
   openGraph: {
     title: eventConfig.meta.title,
     description: eventConfig.meta.description,
-    url: "https://huziafa-kashaf-valima.com",
-    siteName: "Huziafa & Kashaf Valima Celebration",
+    url: "https://wedding-card-alpha-two.vercel.app",
+    siteName: "Huziafa Valima Celebration",
     images: [
       {
         url: eventConfig.meta.ogImage,
         width: 1200,
         height: 630,
-        alt: "Huziafa & Kashaf Valima Invitation",
+        alt: "Huziafa with Daughter of Kamran Ahmed Valima Invitation",
       },
     ],
     locale: "en_PK",

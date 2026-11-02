@@ -125,7 +125,7 @@ export default function Countdown() {
 
         {/* Subtext */}
         <p className="font-serif italic text-base sm:text-lg text-[#30271F]/85 max-w-md mx-auto leading-relaxed">
-          “Until Huziafa &amp; Kashaf begin their new chapter together.”
+          “Until Huziafa &amp; {eventConfig.couple.bride} begin their new chapter together.”
         </p>
 
         {/* Timezone badge */}
