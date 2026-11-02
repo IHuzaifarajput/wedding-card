@@ -7,8 +7,6 @@ import { Phone, Users } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function Contact() {
-  const isSingle = eventConfig.contacts.length === 1;
-
   return (
     <section className="relative w-full py-16 sm:py-24 px-4 bg-[#F9F4E9] text-[#30271F] overflow-hidden">
       <motion.div
@@ -36,43 +34,41 @@ export default function Contact() {
           “For any questions regarding the celebration, feel free to reach out.”
         </p>
 
-        {/* Contact Card(s) */}
-        <div
-          className={`grid grid-cols-1 ${
-            isSingle ? "max-w-xs" : "sm:grid-cols-2 max-w-2xl"
-          } gap-4 sm:gap-6 mx-auto justify-center`}
+        {/* Contact Card: Single unified box for Huzaifa's Family with list of numbers */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="relative max-w-sm sm:max-w-md mx-auto bg-white/95 backdrop-blur-md border border-[#BA8A45]/35 rounded-2xl p-6 sm:p-8 shadow-sm hover:shadow-xl hover:border-[#BA8A45] transition-all duration-300 flex flex-col items-center"
         >
-          {eventConfig.contacts.map((contact, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.15, duration: 0.6 }}
-              whileHover={{ y: -4, transition: { duration: 0.2 } }}
-              className="bg-white/95 backdrop-blur-md border border-[#BA8A45]/35 rounded-2xl p-6 shadow-sm hover:shadow-xl hover:border-[#BA8A45] transition-all duration-300 flex flex-col items-center"
-            >
-              <div className="w-11 h-11 rounded-full bg-[#EEE2CF]/70 border border-[#BA8A45]/35 flex items-center justify-center mb-3 text-[#4E0F1D]">
-                <Users className="w-4 h-4 text-[#4E0F1D]" />
-              </div>
+          {/* Family Icon */}
+          <div className="w-12 h-12 rounded-full bg-[#EEE2CF]/70 border border-[#BA8A45]/35 flex items-center justify-center mb-3 text-[#4E0F1D]">
+            <Users className="w-5 h-5 text-[#4E0F1D]" />
+          </div>
 
-              <h3 className="font-serif text-lg sm:text-xl text-[#4E0F1D] font-medium mb-3">
-                {contact.role}
-              </h3>
+          {/* Heading */}
+          <h3 className="font-serif text-xl sm:text-2xl text-[#4E0F1D] font-medium mb-5">
+            Huziafa’s Family
+          </h3>
 
+          {/* List of Numbers (no person names, just numbers) */}
+          <div className="w-full flex flex-col gap-2.5 sm:gap-3 items-center">
+            {eventConfig.contacts.map((contact, index) => (
               <motion.a
-                whileHover={{ scale: 1.03 }}
+                key={index}
+                whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 href={`tel:${contact.phoneRaw}`}
-                aria-label={`Call ${contact.role} at ${contact.phoneDisplay}`}
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#F9F4E9] text-[#4E0F1D] hover:bg-[#4E0F1D] hover:text-[#F9F4E9] text-sm font-sans font-medium tracking-wider transition-colors duration-200 border border-[#BA8A45]/35 focus:outline-none focus:ring-2 focus:ring-[#BA8A45] shadow-xs"
+                aria-label={`Call ${contact.phoneDisplay}`}
+                className="inline-flex items-center justify-center gap-2.5 w-full max-w-xs px-5 py-2.5 rounded-full bg-[#F9F4E9] text-[#4E0F1D] hover:bg-[#4E0F1D] hover:text-[#F9F4E9] text-sm sm:text-base font-sans font-medium tracking-wider transition-colors duration-200 border border-[#BA8A45]/35 focus:outline-none focus:ring-2 focus:ring-[#BA8A45] shadow-xs"
               >
                 <Phone className="w-3.5 h-3.5 text-[#BA8A45]" />
                 <span>{contact.phoneDisplay}</span>
               </motion.a>
-            </motion.div>
-          ))}
-        </div>
+            ))}
+          </div>
+        </motion.div>
       </motion.div>
     </section>
   );
